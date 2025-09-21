@@ -1,0 +1,115 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.devtools.ksp'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+}
+
+android {
+    namespace "com.sap.codelab"
+    compileSdk = 36
+    buildToolsVersion '36.0.0'
+    defaultConfig {
+        applicationId "com.sap.codelab"
+        minSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+kotlin {
+    target {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_21
+        }
+    }
+}
+
+ext {
+    kotlinCoroutinesVersion = '1.10.2'
+    roomVersion = '2.7.2'
+    lifecycleVersion = '2.9.3'
+}
+
+secrets {
+    // To add your Maps API key to this project:
+    // 1. If the secrets.properties file does not exist, create it in the same folder as the local.properties file.
+    // 2. Add this line, where YOUR_API_KEY is your API key:
+    //        MAPS_API_KEY=YOUR_API_KEY
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.defaults.properties"
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    //Lifecycle, LiveData and ViewModel dependencies
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+
+    //Room persistence
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation 'androidx.test.ext:junit-ktx:1.3.0'
+    ksp "androidx.room:room-compiler:$roomVersion"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+
+    // Google Maps
+    implementation 'com.google.android.gms:play-services-maps:19.2.0'
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
+
+    //Runtime permissions
+    implementation 'com.karumi:dexter:6.2.3'
+
+    // Koin for Android
+    implementation 'io.insert-koin:koin-android:4.1.1'
+    // Koin core features,Test features,JUnit 4,JUnit 5
+    implementation "io.insert-koin:koin-core:4.1.1"
+    testImplementation "io.insert-koin:koin-test:4.1.1"
+    testImplementation "io.insert-koin:koin-test-junit4:4.1.1"
+    testImplementation "io.insert-koin:koin-test-junit5:4.1.1"
+
+    // Koin main features for android,Java Compatibility,Jetpack WorkManager,Navigation Graph
+    implementation "io.insert-koin:koin-android:4.1.1"
+    implementation "io.insert-koin:koin-android-compat:4.1.1"
+
+    testImplementation "com.google.truth:truth:1.4.5"
+    testImplementation "app.cash.turbine:turbine:1.2.1"
+    testImplementation "io.mockk:mockk:1.14.5"
+
+    androidTestImplementation "androidx.room:room-testing:2.8.0"
+    testImplementation "junit:junit:4.13.2"
+
+}
